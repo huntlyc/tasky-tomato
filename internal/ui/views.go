@@ -49,7 +49,7 @@ func (m Model) renderColumn(col int, title string, status string) string {
 
 	items := make([]string, 0, len(tasks)+1)
 	if len(tasks) == 0 {
-		items = append(items, EmptyTaskStyle.Render("(empty)"))
+		items = append(items, EmptyTaskStyle.Render("no tasks"))
 	}
 	for i, t := range tasks {
 		desc := truncateLines(t.Description, 50)
@@ -69,7 +69,7 @@ func (m Model) renderPomo() string {
 		return ""
 	}
 
-	phaseName := strings.ReplaceAll(strings.Title(string(m.pomo.Phase)), "_", " ")
+	phaseName := strings.ReplaceAll(string(m.pomo.Phase), "_", " ")
 	var total time.Duration
 	var style lipgloss.Style
 	switch m.pomo.Phase {
@@ -97,12 +97,12 @@ func (m Model) renderPomo() string {
 
 	barWidth := 40
 	filled := (barWidth * progress) / 100
-	empty := barWidth - filled
-	bar := strings.Repeat("█", filled) + strings.Repeat("░", empty)
+	bar := strings.Repeat("█", filled) + strings.Repeat("░", barWidth-filled)
 
 	label := fmt.Sprintf("%s %s %s", phaseName, bar, formatDuration(m.pomo.Remaining))
 	if m.pomo.Paused {
 		label += " (paused)"
+		style = PomoPausedStyle
 	}
 	label += fmt.Sprintf(" • cycle %d/%d", m.pomo.CycleCount+1, m.settings.SessionsBeforeLong)
 
