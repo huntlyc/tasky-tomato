@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbletea/v2"
 
 	"github.com/huntlyc/tasky-tomato/internal/db"
 	"github.com/huntlyc/tasky-tomato/internal/ui"
@@ -24,7 +24,7 @@ func main() {
 
 	m := ui.NewModel(database)
 
-	p := tea.NewProgram(m, tea.WithAltScreen())
+	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)

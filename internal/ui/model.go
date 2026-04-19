@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/bubbles/textarea"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/textarea"
+	"charm.land/bubbles/v2/textinput"
+	"charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
 	"github.com/huntlyc/tasky-tomato/internal/config"
 	"github.com/huntlyc/tasky-tomato/internal/db"
@@ -23,7 +23,7 @@ type TaskFormState struct {
 	Focus       int
 	Edit        bool
 	ID          int
-	ButtonFocus int // 0 = save, 1 = discard
+	ButtonFocus int
 }
 
 type SettingsFormState struct {
@@ -105,40 +105,6 @@ func (m *Model) DeleteTask(id int) error {
 	return db.DeleteTask(m.db, id)
 }
 
-func (m Model) saveTask() (Model, tea.Cmd) {
-	if strings.TrimSpace(m.taskForm.Title.Value()) == "" {
-		m.message = "title is required"
-		m.messageTime = time.Now()
-		return m, nil
-	}
-	if m.taskForm.Edit {
-		t := models.Task{ID: m.taskForm.ID, Title: strings.TrimSpace(m.taskForm.Title.Value()), Description: strings.TrimSpace(m.taskForm.Desc.Value())}
-		for _, task := range m.tasks {
-			if task.ID == t.ID {
-				t.Status = task.Status
-				break
-			}
-		}
-		if err := m.UpdateTask(t); err != nil {
-			m.err = err
-			return m, nil
-		}
-	} else {
-		if err := m.AddTask(strings.TrimSpace(m.taskForm.Title.Value()), strings.TrimSpace(m.taskForm.Desc.Value())); err != nil {
-			m.err = err
-			return m, nil
-		}
-	}
-	if err := m.loadTasks(); err != nil {
-		m.err = err
-		return m, nil
-	}
-	m.mode = config.ModeBoard
-	m.message = "saved"
-	m.messageTime = time.Now()
-	return m, nil
-}
-
 func (m Model) Init() tea.Cmd {
 	return nil
 }
@@ -166,21 +132,26 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m Model) View() string {
+func (m Model) View() tea.View {
 	if m.err != nil {
-		return errorView(m.err)
+		v := tea.NewView(errorView(m.err))
+		v.AltScreen = true
+		return v
 	}
 
+	var v tea.View
 	switch m.mode {
 	case config.ModeTaskForm:
-		return m.renderTaskForm()
+		v = tea.NewView(m.renderTaskForm())
 	case config.ModeSettingsForm:
-		return m.renderSettingsForm()
+		v = tea.NewView(m.renderSettingsForm())
 	case config.ModeConfirmDelete:
-		return m.renderDeleteConfirm()
+		v = tea.NewView(m.renderDeleteConfirm())
 	default:
-		return m.renderBoard()
+		v = tea.NewView(m.renderBoard())
 	}
+	v.AltScreen = true
+	return v
 }
 
 func errorView(err error) string {
@@ -227,7 +198,7 @@ func (m Model) contentWidth() int {
 }
 
 func (m Model) columnWidth() int {
-	w := m.contentWidth() - 4 // account for margin
+	w := m.contentWidth() - 4
 	col := w / 3
 	if col < 20 {
 		col = 20
@@ -247,7 +218,7 @@ func initTextInput(placeholder string, value string) textinput.Model {
 	ti.Placeholder = placeholder
 	ti.SetValue(value)
 	ti.CharLimit = 120
-	ti.Width = 40
+	ti.SetWidth(40)
 	return ti
 }
 
@@ -258,8 +229,6 @@ func newTaskForm(edit bool, t models.Task) TaskFormState {
 	desc.SetHeight(4)
 	desc.SetWidth(60)
 	desc.ShowLineNumbers = false
-	desc.FocusedStyle.Base = lipgloss.NewStyle().BorderForeground(lipgloss.Color("205"))
-	desc.BlurredStyle.Base = lipgloss.NewStyle().BorderForeground(lipgloss.Color("240"))
 	if edit {
 		title.SetValue(t.Title)
 		desc.SetValue(t.Description)
@@ -330,4 +299,38 @@ func (m *Model) tasksInCol(col int) []models.Task {
 	default:
 		return nil
 	}
+}
+
+func (m Model) saveTask() (tea.Model, tea.Cmd) {
+	if strings.TrimSpace(m.taskForm.Title.Value()) == "" {
+		m.message = "title is required"
+		m.messageTime = time.Now()
+		return m, nil
+	}
+	if m.taskForm.Edit {
+		t := models.Task{ID: m.taskForm.ID, Title: strings.TrimSpace(m.taskForm.Title.Value()), Description: strings.TrimSpace(m.taskForm.Desc.Value())}
+		for _, task := range m.tasks {
+			if task.ID == t.ID {
+				t.Status = task.Status
+				break
+			}
+		}
+		if err := m.UpdateTask(t); err != nil {
+			m.err = err
+			return m, nil
+		}
+	} else {
+		if err := m.AddTask(strings.TrimSpace(m.taskForm.Title.Value()), strings.TrimSpace(m.taskForm.Desc.Value())); err != nil {
+			m.err = err
+			return m, nil
+		}
+	}
+	if err := m.loadTasks(); err != nil {
+		m.err = err
+		return m, nil
+	}
+	m.mode = config.ModeBoard
+	m.message = "saved"
+	m.messageTime = time.Now()
+	return m, nil
 }

@@ -5,15 +5,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbletea/v2"
 
 	"github.com/huntlyc/tasky-tomato/internal/config"
 	"github.com/huntlyc/tasky-tomato/internal/db"
 	"github.com/huntlyc/tasky-tomato/internal/models"
 )
 
-func (m Model) updateBoard(msg tea.KeyMsg) (Model, tea.Cmd) {
+func (m Model) updateBoard(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch {
 	case key.Matches(msg, Keys.Quit):
 		return m, tea.Quit
@@ -203,7 +203,7 @@ func (m *Model) moveSelectedTask(vertical int, horizontal int) error {
 	return nil
 }
 
-func (m Model) updateTaskForm(msg tea.KeyMsg) (Model, tea.Cmd) {
+func (m Model) updateTaskForm(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch {
 	case key.Matches(msg, Keys.Discard):
 		m.mode = config.ModeBoard
@@ -250,7 +250,7 @@ func (m Model) updateTaskForm(msg tea.KeyMsg) (Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m Model) updateSettingsForm(msg tea.KeyMsg) (Model, tea.Cmd) {
+func (m Model) updateSettingsForm(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch {
 	case key.Matches(msg, Keys.Discard):
 		m.mode = config.ModeBoard
@@ -298,7 +298,7 @@ func (m Model) updateSettingsForm(msg tea.KeyMsg) (Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m Model) updateDeleteConfirm(msg tea.KeyMsg) (Model, tea.Cmd) {
+func (m Model) updateDeleteConfirm(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch strings.ToLower(msg.String()) {
 	case "y", "enter":
 		if err := m.DeleteTask(m.taskForm.ID); err != nil {
@@ -320,7 +320,7 @@ func (m Model) updateDeleteConfirm(msg tea.KeyMsg) (Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m Model) updateTick() (Model, tea.Cmd) {
+func (m Model) updateTick() (tea.Model, tea.Cmd) {
 	if m.message != "" && time.Since(m.messageTime) > 3*time.Second {
 		m.message = ""
 	}
