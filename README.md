@@ -1,5 +1,7 @@
 # Tasky Tomato
 
+![Tasky Tomato](tasky-tomato.png)
+
 A test of vibe coding. It's always a todo app, right?
 
 This is a simple TUI Kanban task manager with built-in Pomodoro timer, using Charm's tooling.
