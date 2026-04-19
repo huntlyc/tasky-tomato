@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 
 	"github.com/huntlyc/tasky-tomato/internal/config"
 	"github.com/huntlyc/tasky-tomato/internal/models"

@@ -2,24 +2,25 @@ package ui
 
 import (
 	"fmt"
+	"image/color"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 )
 
 var (
-	baseColor     = lipgloss.Color("#1e1e2e")
-	surface2Color = lipgloss.Color("#585b70")
-	textColor     = lipgloss.Color("#cdd6f4")
-	subtextColor  = lipgloss.Color("#a6adc8")
-	blueColor     = lipgloss.Color("#89b4fa")
-	lavenderColor = lipgloss.Color("#b4befe")
-	greenColor    = lipgloss.Color("#a6e3a1")
-	yellowColor   = lipgloss.Color("#f9e2af")
-	peachColor    = lipgloss.Color("#fab387")
-	redColor      = lipgloss.Color("#f38ba8")
-	mauveColor    = lipgloss.Color("#cba6f7")
-	tealColor     = lipgloss.Color("#94e2d5")
-	roseColor     = lipgloss.Color("#f5e0dc")
+	baseColor     color.Color = lipgloss.Color("#1e1e2e")
+	surface2Color color.Color = lipgloss.Color("#585b70")
+	textColor     color.Color = lipgloss.Color("#cdd6f4")
+	subtextColor  color.Color = lipgloss.Color("#a6adc8")
+	blueColor     color.Color = lipgloss.Color("#89b4fa")
+	lavenderColor color.Color = lipgloss.Color("#b4befe")
+	greenColor    color.Color = lipgloss.Color("#a6e3a1")
+	yellowColor   color.Color = lipgloss.Color("#f9e2af")
+	peachColor    color.Color = lipgloss.Color("#fab387")
+	redColor      color.Color = lipgloss.Color("#f38ba8")
+	mauveColor    color.Color = lipgloss.Color("#cba6f7")
+	tealColor     color.Color = lipgloss.Color("#94e2d5")
+	roseColor     color.Color = lipgloss.Color("#f5e0dc")
 
 	ScreenStyle                 = lipgloss.NewStyle().Foreground(textColor).Margin(0, 2)
 	AppStyle                    = lipgloss.NewStyle().Foreground(textColor).Padding(1, 2)
@@ -32,7 +33,7 @@ var (
 	MessageStyle                = lipgloss.NewStyle().Foreground(yellowColor).PaddingTop(1)
 	HelpStyle                   = lipgloss.NewStyle().Foreground(subtextColor).PaddingTop(1)
 	HelpCollapsedStyle          = lipgloss.NewStyle().Foreground(surface2Color).Italic(true).PaddingTop(1)
-	PomoIdleStyle               = lipgloss.NewStyle().Foreground(subtextColor).Bold(true).Padding(0, 1).MarginTop(1)
+	PomoIdleStyle               = lipgloss.NewStyle().Foreground(subtextColor).Bold(true).Padding(0, 1).Margin(1, 0)
 	PomoWorkStyle               = lipgloss.NewStyle().Foreground(greenColor).Bold(true).Padding(0, 1).Margin(1, 0)
 	PomoBreakStyle              = lipgloss.NewStyle().Foreground(tealColor).Bold(true).Padding(0, 1).Margin(1, 0)
 	PomoLongBreakStyle          = lipgloss.NewStyle().Foreground(peachColor).Bold(true).Padding(0, 1).Margin(1, 0)
@@ -50,7 +51,7 @@ var (
 	ButtonSecondaryFocusedStyle = lipgloss.NewStyle().Foreground(textColor).Border(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("white")).Padding(0, 2)
 )
 
-func ColorByStatus(status string) lipgloss.Color {
+func ColorByStatus(status string) color.Color {
 	switch status {
 	case "todo":
 		return mauveColor
