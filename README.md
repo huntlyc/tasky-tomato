@@ -2,7 +2,7 @@
 
 A test of vibe coding. It's always a todo app, right?
 
-This is a simple TUI Kanban task manager with built-in Pomodoro timer, uising Charm's tooling.
+This is a simple TUI Kanban task manager with built-in Pomodoro timer, using Charm's tooling.
 
 This was done in opencode with 'big pickle'... .... ..
 
