@@ -25,6 +25,7 @@ var (
 	ScreenStyle                 = lipgloss.NewStyle().Foreground(textColor).Margin(0, 2)
 	AppStyle                    = lipgloss.NewStyle().Foreground(textColor).Padding(1, 2)
 	ColumnFrameStyle            = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).BorderForeground(surface2Color)
+	CurrentColumnFrameStyle     = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).BorderForeground(lavenderColor)
 	CurrentHeaderStyle          = lipgloss.NewStyle().Bold(true).Foreground(lavenderColor)
 	ColumnHeaderStyle           = lipgloss.NewStyle().Bold(true).Foreground(subtextColor)
 	HeaderStyle                 = lipgloss.NewStyle().Bold(true).Foreground(roseColor)

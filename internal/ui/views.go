@@ -61,7 +61,12 @@ func (m Model) renderColumn(col int, title string, status string) string {
 	}
 
 	content := lipgloss.JoinVertical(lipgloss.Left, items...)
-	return ColumnFrameStyle.Width(m.columnWidth()).Render(lipgloss.JoinVertical(lipgloss.Left, head, content))
+
+	columnStyle := ColumnFrameStyle
+	if isCurrent {
+		columnStyle = CurrentColumnFrameStyle
+	}
+	return columnStyle.Width(m.columnWidth()).Render(lipgloss.JoinVertical(lipgloss.Left, head, content))
 }
 
 func (m Model) renderPomo() string {
