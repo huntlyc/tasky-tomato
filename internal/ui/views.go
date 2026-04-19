@@ -27,7 +27,7 @@ func (m Model) renderBoard() string {
 }
 
 func (m Model) renderTopBar() string {
-	title := TitleStyle.Render("tasky tomato")
+	title := TitleStyle.Render("Tasky Tomato")
 	msg := ""
 	if m.message != "" {
 		msg = MessageStyle.Render(m.message)
